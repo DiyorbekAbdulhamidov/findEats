@@ -10,7 +10,7 @@ const Routes = () => {
   return (
     <BrowserRouter>
       <BaseRoutes>
-        <Route path="" element={<Protected allow={isAuthenticated} navigate="/auth/login" />}>
+        <Route path="">
           <Route index element={<Home />} />
         </Route>
 
