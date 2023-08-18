@@ -15,7 +15,7 @@ import {
 import { IconArrowLeft } from '@tabler/icons-react';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -80,7 +80,7 @@ export default function ForgotPassword() {
           <Anchor color="dimmed" size="sm" className={classes.control}>
             <Center inline>
               <IconArrowLeft size={rem(12)} stroke={1.5} />
-              <Box ml={5}>Back to the login page</Box>
+              <Box ml={5}><Link to={'/auth/login'}>Back to the login page</Link></Box>
             </Center>
           </Anchor>
           <Button className={classes.control} onClick={handleResetPassword}>Reset password</Button>

@@ -62,7 +62,7 @@ function Register() {
             <Group position="apart" mt="lg">
               <Checkbox label="Remember me" />
               <Anchor component="button" size="sm">
-                Do have an account? <Link to={'/login'}>login</Link>
+                <Link to={'/auth/login'} style={{ color: "blue" }}>Do have an account?</Link>
               </Anchor>
             </Group>
             <Button type="submit" fullWidth mt="xl">
