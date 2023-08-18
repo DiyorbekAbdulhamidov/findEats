@@ -18,4 +18,4 @@ const analytics = getAnalytics(app);
 export const auth = getAuth();
 export const provider = new GoogleAuthProvider();
 
-auth.languageCode = 'it';
+auth.languageCode = 'uz';
