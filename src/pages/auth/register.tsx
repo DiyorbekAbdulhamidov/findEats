@@ -1,81 +1,81 @@
-import React from "react";
-import { auth, provider } from "../../firebase/firebase";
-import { createUserWithEmailAndPassword, getAuth, signInWithPopup } from "firebase/auth";
-import {
-  TextInput,
-  PasswordInput,
-  Checkbox,
-  Anchor,
-  Paper,
-  Container,
-  Group,
-  Button,
-  Title,
-} from '@mantine/core';
-import { Link, useNavigate } from "react-router-dom";
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Anchor, Button, Container, Divider, Group, Paper, PasswordInput, Stack, Text, TextInput } from '@mantine/core'
+import { useForm, yupResolver } from '@mantine/form'
+import { notifications } from '@mantine/notifications'
+import { AuthErrorCodes } from 'firebase/auth'
+import { Service } from 'modules/auth'
+import { useAuth } from 'modules/auth/context'
+import { IForm } from 'modules/auth/types'
+import * as yup from 'yup'
 
-function Register() {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+import { GoogleButton } from 'components'
 
-  const navigate = useNavigate();
+const schema = yup.object({
+  name: yup.string().min(5).label('Name').required(),
+  email: yup.string().email().label('Email').required(),
+  password: yup.string().min(6).label('Password').required()
+})
 
-  const signInWithGoogle = async () => {
+const Register = () => {
+  const { methods } = useAuth()
+  const [loading, setLoading] = React.useState(false)
+  const navigate = useNavigate()
+  const form = useForm<IForm.Register>({
+    initialValues: { name: '', email: '', password: '' },
+    validate: yupResolver(schema)
+  })
+
+  const onSubmit = async ({ name, password, email }: IForm.Register) => {
     try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      console.log(user);
-      navigate('/');
-    }
-    catch (error: any) {
-      const errorMessage = error.message;
-      console.error(errorMessage);
-    }
-  };
+      setLoading(true)
+      const { user } = await Service.register({ email, password })
 
-  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const authInstance = getAuth();
+      await Service.updateProfile(user, { name })
 
-    try {
-      const userCredential = await createUserWithEmailAndPassword(authInstance, email, password);
-      const user = userCredential.user;
-      console.log(user);
-      navigate('/auth/login');
-    } catch (error: any) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.error(errorCode, errorMessage);
+      methods.update({ name, isVerified: false, email })
+    } catch (err: any) {
+      if (err?.code === AuthErrorCodes.EMAIL_EXISTS) {
+        notifications.show({ message: `this email ${email} already exist`, color: 'red' })
+      } else notifications.show({ message: err?.message, color: 'red' })
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div>
-      <Container size={420} my={40}>
-        <Title order={2} ta="center" mt="md" mb={50}>
-          Register
-        </Title>
-        <form onSubmit={handleRegister}>
-          <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-            <TextInput value={email} onChange={(e) => setEmail(e.target.value)} label="Email" placeholder="Your email" required />
-            <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} label="Password" placeholder="Your password" required mt="md" />
-            <Group position="apart" mt="lg">
-              <Checkbox label="Remember me" />
-              <Anchor component="button" size="sm">
-                <Link to={'/auth/login'} style={{ color: "blue" }}>Do have an account?</Link>
-              </Anchor>
-            </Group>
-            <Button type="submit" fullWidth mt="xl">
+    <Container size={420} my={40}>
+      <Paper radius="md" p="xl" withBorder>
+        <Text size="lg" weight={500} sx={{ textAlign: 'center' }}>
+          Welcome to Chess Game
+        </Text>
+
+        <Group grow mb="md" mt="md">
+          <GoogleButton radius="xl" onClick={Service.signInWithGoogle}>
+            Google
+          </GoogleButton>
+        </Group>
+
+        <Divider label="Or continue with email" labelPosition="center" my="lg" />
+
+        <form onSubmit={form.onSubmit(onSubmit)}>
+          <Stack>
+            <TextInput label="Name" placeholder="Your name" radius="md" {...form.getInputProps('name')} />
+            <TextInput label="Email" placeholder="Your email address" radius="md" {...form.getInputProps('email')} />
+            <PasswordInput label="Password" placeholder="Your password" radius="md" {...form.getInputProps('password')} />
+          </Stack>
+          <Group position="apart" mt="xl">
+            <Anchor component="button" type="button" color="dimmed" onClick={() => navigate('/auth/login')} size="xs">
+              Already have an account? Login
+            </Anchor>
+            <Button loading={loading} type="submit" radius="xl">
               Register
             </Button>
-            <Button fullWidth mt="xl" onClick={signInWithGoogle}>
-              With Google
-            </Button>
-          </Paper>
+          </Group>
         </form>
-      </Container>
-    </div>
-  );
+      </Paper>
+    </Container>
+  )
 }
 
-export default Register;
+export default Register

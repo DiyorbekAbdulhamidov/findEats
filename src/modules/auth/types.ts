@@ -1,22 +1,31 @@
 export namespace IEntity {
-
   export interface User {
+    name: string
+    avatarURL?: string
+    email: string
+    isVerified: boolean
   }
-
-  export interface Tokens {
-    access: string
-    refresh: string
+}
+export namespace IForm {
+  export interface Login {
+    email: string
+    password: string
   }
-
+  export interface Register {
+    name: string
+    email: string
+    password: string
+  }
 }
 
 export namespace IContext {
   export interface Auth {
-    isAuthenticated: boolean
     user: IEntity.User | null
+    isLoading: boolean
+
+    isAuthenticated: boolean
     methods: {
-      login: (user: IEntity.User) => void
-      logout: () => void
+      update: (user: IEntity.User) => void
     }
   }
 }

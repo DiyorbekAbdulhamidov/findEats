@@ -1,15 +1,14 @@
-import { FunctionComponent } from "react";
+import { Flex } from '@mantine/core'
 
-interface HomeProps {
+import { Navbar } from 'components'
 
-}
+import Game from './game'
 
-const Home: FunctionComponent<HomeProps> = () => {
-  return (
-    <>
+const Home = () => (
+  <Flex direction="column" h="100vh">
+    <Navbar />
+    <Game />
+  </Flex>
+)
 
-    </>
-  );
-}
-
-export default Home;
+export default Home
