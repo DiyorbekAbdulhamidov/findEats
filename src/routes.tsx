@@ -1,6 +1,7 @@
 import { Navigate, Outlet, Route, Routes as Switch } from 'react-router-dom'
 import { useAuth } from 'modules/auth/context'
 import { Action, Auth, Home, ResetPassword, Verification } from 'pages'
+import Game from 'pages/home/game'
 
 const Routes = () => {
   const { isAuthenticated, user } = useAuth()
@@ -8,17 +9,20 @@ const Routes = () => {
 
   return (
     <Switch>
-      <Route path="" element={isAuthenticated ? <Home /> : <Navigate to="/auth" />} />
+      <Route path="" element={isAuthenticated ? <Outlet /> : <Navigate to="/auth" />}>
+        <Route index element={<Home />} />
+        <Route path="game" element={user?.isVerified ? <Game /> : <Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Route>
 
       <Route path="auth" element={isAuthenticated ? <Navigate to="/" /> : <Outlet />}>
         <Route path="login" element={<Auth.Login />} />
         <Route path="register" element={<Auth.Register />} />
+        <Route path="reset-password" element={<ResetPassword />} />
         <Route path="*" index element={<Navigate to="/auth/login" />} />
       </Route>
 
       <Route path="verification" element={isAuthenticated && !isVerified ? <Verification /> : <Navigate to="/" />} />
-      <Route path="reset-password" element={<ResetPassword  />} />
-
 
       <Route path="action" element={<Action />} />
       <Route path="*" element={<Navigate to="/" />} />
@@ -26,4 +30,4 @@ const Routes = () => {
   )
 }
 
-export default Routes
+export default Routes;

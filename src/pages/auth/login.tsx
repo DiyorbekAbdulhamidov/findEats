@@ -59,6 +59,11 @@ const Login = () => {
             <Anchor component="button" type="button" color="dimmed" onClick={() => navigate('/auth/register')} size="xs">
               Don't have an account? Register
             </Anchor>
+
+            <Anchor component="button" type="button" color="dimmed" onClick={() => navigate('/auth/reset-password')} size="xs">
+              Forgot Password?
+            </Anchor>
+
             <Button loading={loading} type="submit" radius="xl">
               Login
             </Button>

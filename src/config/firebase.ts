@@ -10,7 +10,6 @@ const options: FirebaseOptions = {
 	appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
 const app = initializeApp(options);
 
 const auth = getAuth(app);

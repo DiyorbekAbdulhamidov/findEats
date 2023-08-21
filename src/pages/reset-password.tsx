@@ -1,10 +1,6 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom';
 import {
-  Anchor,
-  Box,
   Button,
-  Center,
   Container,
   createStyles,
   Group,
@@ -14,8 +10,8 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { IconArrowLeft } from '@tabler/icons-react';
 import { sendResetPassword } from 'modules/auth/service';
+import { alert } from 'utils';
 
 import { Navbar } from 'components'
 
@@ -42,14 +38,9 @@ const useStyles = createStyles((theme) => ({
 
 export default function ResetPassword() {
 
-
-
   const { classes } = useStyles();
 
-   const navigate = useNavigate();
-
   const [email, setEmail] = React.useState('')
-
 
   const [loading, setLoading] = React.useState(false);
 
@@ -57,18 +48,15 @@ export default function ResetPassword() {
     try {
       setLoading(true);
       await sendResetPassword(email);
-      navigate('/')
-      alert('Reset link has been sent to your email.');
+      alert.success('Reset link has been sent to your email.');
     }
     catch (error) {
-      alert('Error sending reset email. Please try again.');
+      alert.error('Error sending reset email. Please try again.');
     }
     finally {
       setLoading(false);
     }
   };
-
-
 
   return (
     <>
@@ -85,12 +73,6 @@ export default function ResetPassword() {
           <TextInput label="Your email" placeholder="Your Email" required value={email}
             onChange={(e) => setEmail(e.target.value)} />
           <Group position="apart" mt="lg" className={classes.controls}>
-            <Anchor color="dimmed" size="sm" className={classes.control}>
-              <Center inline>
-                <IconArrowLeft size={rem(12)} stroke={1.5} />
-                <Box ml={5} >Back to the login page</Box>
-              </Center>
-            </Anchor>
             <Button onClick={handleResetPassword} className={classes.control}>Reset password</Button>
           </Group>
         </Paper>

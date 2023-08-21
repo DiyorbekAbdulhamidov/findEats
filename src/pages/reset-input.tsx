@@ -1,49 +1,54 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Button, Loader, TextInput } from '@mantine/core'
-import { resetPasswordWithCode } from 'modules/auth/service'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Container, Loader, Text, TextInput } from '@mantine/core';
+import { resetPasswordWithCode } from 'modules/auth/service';
+import { alert } from 'utils';
 
 interface ResetPasswordProps {
-  oobCode: string // Oob kodi komponentga prop sifatida o'tkazilishi kerak
+  oobCode: string;
 }
 
-const ResetInput = ({ oobCode }: ResetPasswordProps) => {
-  const [loading, setLoading] = useState(false)
-  const [newPassword, setNewPassword] = useState('')
-
-console.log(oobCode);
-  
-
-  const navigate = useNavigate()
+const ResetInput: React.FC<ResetPasswordProps> = ({ oobCode }) => {
+  const [loading, setLoading] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleResetPassword = async () => {
-    setLoading(true)
+    if (newPassword.length < 6) {
+      alert.error('Password must be at least 6 characters long.');
+      return;
+    }
+
+    setLoading(true);
 
     try {
-      await resetPasswordWithCode(oobCode, newPassword)
-
-      setLoading(false)
-      window.location.href = '/'
+      await resetPasswordWithCode(oobCode, newPassword);
+      setLoading(false);
+      navigate('/');
     } catch (error) {
-      console.error('Parolni tiklashda xatolik:', error)
-      setLoading(false)
+      alert.error('Error reset password');
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <>
+    <Container mt={200}>
+      <Text c="black" fz="lg" ta="center" mb={40}>
+        Enter New Password
+      </Text>
       <TextInput
-        placeholder="Yangi parolni kiriting"
+        placeholder="Enter New Password"
         type="password"
         value={newPassword}
-        onChange={event => setNewPassword(event.currentTarget.value)}
+        onChange={(event) => setNewPassword(event.currentTarget.value)}
         disabled={loading}
+        mb={10}
       />
       <Button onClick={handleResetPassword} loading={loading}>
-        {loading ? <Loader /> : 'Parolni tiklash'}
+        {loading ? <Loader /> : 'Submit'}
       </Button>
-    </>
-  )
-}
+    </Container>
+  );
+};
 
-export default ResetInput
+export default ResetInput;
