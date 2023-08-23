@@ -84,4 +84,4 @@ const Game = (props: GameProps) => {
   )
 }
 
-export default Game
+export default Game;
