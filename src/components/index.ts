@@ -1,2 +1,6 @@
+export { default as Chessboard } from './board'
+export { default as Cell } from './box'
+export { default as CButton } from './c-button'
+export { default as CountDisplay } from './counter'
 export { GoogleButton } from './google-button'
 export { default as Navbar } from './navbar/navbar'

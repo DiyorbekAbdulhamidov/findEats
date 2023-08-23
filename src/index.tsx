@@ -7,6 +7,7 @@ import Routes from 'routes'
 import * as Containers from 'containers'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
+import './styles/index.scss'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
