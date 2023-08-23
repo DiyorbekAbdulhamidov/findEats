@@ -6,7 +6,7 @@ import { CButton, Chessboard, CountDisplay, Navbar } from 'components'
 
 import { numRookCaptures } from './logic'
 
-interface GameProps {}
+interface GameProps { }
 interface Option {
   label: string
   value: string
