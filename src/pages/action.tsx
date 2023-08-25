@@ -42,4 +42,4 @@ const Action = (props: ActionProps) => {
   return <LoadingOverlay visible overlayBlur={2} />
 }
 
-export default Action
+export default Action;
